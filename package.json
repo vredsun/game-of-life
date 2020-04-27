@@ -1,6 +1,6 @@
 {
   "name": "game-of-life",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "",
   "main": "./dist/client/index.js",
@@ -94,7 +94,16 @@
   "bugs": {
     "url": "https://github.com/vredsun/game-of-life/issues"
   },
-
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm --no-git-tag-version version patch && git add package.json && git add package-lock.json"
+    }
+  },
+  "lint-staged": {
+    "./src/**/*.{ts,tsx}": [
+      "eslint --config ./.eslintrc.js --ext .ts,.tsx --fix --quiet"
+    ]
+  },
   "engines": {
     "node": ">=12.11.1",
     "npm": ">=5.5.2"
