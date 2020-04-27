@@ -34,7 +34,7 @@ const palette = {
   color_main_primary_20: '#F5EFE4',
   color_main_primary_10: '#FAF7F2',
 
-  color_secondary_primary: '#786B99',
+  color_secondary_primary: '#FF0000',
   color_secondary_shadow: '#544B6B',
   color_secondary_primary_90: '#867AA3',
   color_secondary_primary_80: '#9389AD',

@@ -1,12 +1,25 @@
 import Square from '~components/game_page/square/Square';
 import { STATUS } from '~components/game_page/constants';
 
-export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gridStroke: number) => {
+const getRandomValue = <T>(values: T[]) => {
+  const min = 0;
+  const max = values.length;
+
+  return values[Math.floor(Math.random() * (max - min)) + min]; //Максимум не включается, минимум включается
+};
+
+const getRandomStatus = () => {
+  return getRandomValue([STATUS.IS_DEAD, STATUS.IS_DEAD, STATUS.IS_LIFE]);
+};
+
+export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gridStroke: number, random?: boolean) => {
   const newMatrix: Square[][] = [];
 
   for(let x = 0; x < sizeX; x += 1) {
     newMatrix.push([]);
     for(let y = 0; y < sizeY; y += 1) {
+      const status = random ? getRandomStatus() : undefined;
+
       newMatrix[x][y] = new Square({
         gridStroke,
         matrix: newMatrix,
@@ -18,6 +31,7 @@ export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gri
           squareSize,
           squareSize,
         ],
+        status,
       });
     }
   }

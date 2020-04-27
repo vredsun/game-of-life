@@ -4,6 +4,7 @@ export const GlobalStyle = createGlobalStyle`
   ${({ theme }) => css`
     body {
       color: ${({ theme }) => theme.colors.black};
+      background-color: #EEEEEE;
     }
 
     ::-webkit-scrollbar-track-piece {

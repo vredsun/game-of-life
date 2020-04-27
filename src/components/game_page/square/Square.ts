@@ -1,6 +1,6 @@
 import { STATUS, STATUS_COLOR_RECORD, STATUS_HOVER_COLOR_RECORD } from '~components/game_page/constants';
 import { isNumber } from 'util';
-import { lighten } from 'polished';
+import { darken } from 'polished';
 
 type Props = {
   matrix: any[][];
@@ -80,9 +80,9 @@ class Square {
 
   get bg_color() {
     if (this._is_hover || this._is_hover_in_cursor_line) {
-      return lighten(0.3, 'black');
+      return darken(0.2, '#F7F7F7');
     } else {
-      return '#EEEEEE';
+      return '#F7F7F7';
     }
   }
 

@@ -1,4 +1,4 @@
-import { lighten } from 'polished';
+import { darken, lighten } from 'polished';
 
 export enum STATUS {
   IS_LIFE = 'IS_LIFE',
@@ -7,11 +7,11 @@ export enum STATUS {
 
 export const STATUS_COLOR_RECORD: Record<STATUS, string> = {
   [STATUS.IS_LIFE]: '#FF0000',
-  [STATUS.IS_DEAD]: '#000000',
+  [STATUS.IS_DEAD]: '#F7F7F7',
 };
 
 export const STATUS_HOVER_COLOR_RECORD: Record<STATUS, string> = {
-  [STATUS.IS_LIFE]: lighten(0.3, STATUS_COLOR_RECORD.IS_LIFE),
-  [STATUS.IS_DEAD]: lighten(0.3, STATUS_COLOR_RECORD.IS_DEAD),
+  [STATUS.IS_LIFE]: lighten(0.1, STATUS_COLOR_RECORD.IS_LIFE),
+  [STATUS.IS_DEAD]: darken(0.1, STATUS_COLOR_RECORD.IS_DEAD),
 };
 
