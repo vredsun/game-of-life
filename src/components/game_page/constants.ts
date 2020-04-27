@@ -1,0 +1,11 @@
+export enum STATUS {
+  IS_LIFE = 'IS_LIFE',
+  IS_MAYBY_LIFE = 'IS_MAYBY_LIFE',
+  IS_DEAD = 'IS_DEAD',
+};
+
+export const STATUS_COLOR_RECORD: Record<STATUS, string> = {
+  [STATUS.IS_LIFE]: '#FF0000',
+  [STATUS.IS_MAYBY_LIFE]: '#FFFF00',
+  [STATUS.IS_DEAD]: '#000000',
+};
