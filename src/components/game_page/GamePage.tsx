@@ -38,8 +38,8 @@ const GamePage: React.FC<Props> = React.memo(
     const [startStatus, changeStartStatus] = React.useState(false);
 
     const [gridStroke] = React.useState(1);
-    const [squareSize] = React.useState(20);
-    const [sizeX] = React.useState(30);
+    const [squareSize] = React.useState(15);
+    const [sizeX] = React.useState(60);
     const [sizeY] = React.useState(30);
 
     const [matrix, setMatrix] = React.useState(() => initMatrix(sizeX, sizeY, squareSize, gridStroke));
@@ -68,9 +68,6 @@ const GamePage: React.FC<Props> = React.memo(
             checkOnHoverMatrix(matrix, null, null);
             document.body.style.cursor = 'default';
           };
-          const handleClick = (event: MouseEvent) => {
-            clickOnHoverSquare();
-          };
           const handleMouseDown = (event: MouseEvent) => {
             const { x, y } = event;
             const canvasBoundingClientRect = canvas.getBoundingClientRect();
@@ -81,13 +78,15 @@ const GamePage: React.FC<Props> = React.memo(
             isNewStatusOnMouse = isHoverSquare.status;
           };
           const handleMouseUp = (event: MouseEvent) => {
+            clickOnHoverSquare(isNewStatusOnMouse);
+
             isMouseDown = false;
             isNewStatusOnMouse = null;
           };
 
           canvas.addEventListener('mousemove', handleMouseMove);
           canvas.addEventListener('mouseout', handleMouseOut);
-          canvas.addEventListener('click', handleClick);
+
           canvas.addEventListener('mousedown', handleMouseDown);
           canvas.addEventListener('mouseup', handleMouseUp);
 
@@ -99,7 +98,6 @@ const GamePage: React.FC<Props> = React.memo(
 
             drawBg(ctx);
             drawMatrix(ctx, matrix);
-
           };
 
           requestAnimationFrame(draw);
@@ -107,7 +105,6 @@ const GamePage: React.FC<Props> = React.memo(
           return () => {
             canvas.removeEventListener('mousemove', handleMouseMove);
             canvas.removeEventListener('mouseout', handleMouseOut);
-            canvas.removeEventListener('click', handleClick);
             canvas.removeEventListener('mousedown', handleMouseDown);
             canvas.removeEventListener('mouseup', handleMouseUp);
 
@@ -135,7 +132,7 @@ const GamePage: React.FC<Props> = React.memo(
           const draw = (now: number) => {
             animationId = requestAnimationFrame(draw);
 
-            if (now > (startTime + step * 500)) {
+            if (now > (startTime + step * 100)) {
               step += 1;
               const hasChanges = checkMatrixOnAliveStatus(matrix);
               if (hasChanges) {
