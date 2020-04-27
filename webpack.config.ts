@@ -34,7 +34,7 @@ const getPlugins = () => {
     new HtmlWebpackPlugin({
       inject: 'head',
       scriptLoading: 'defer',
-      title: 'game_of_life',
+      title: 'Игра "Жизнь"',
       template: BUILD.htmlTemplateName,
       publicPath: process.env.PUBLIC_PATH,
       hash: true,
