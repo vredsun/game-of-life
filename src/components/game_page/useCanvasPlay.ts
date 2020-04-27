@@ -31,8 +31,7 @@ const useCanvasPlay = (ref_canvas: React.MutableRefObject<HTMLCanvasElement>, pl
             }
           }
         };
-
-        requestAnimationFrame(draw);
+        animationId = requestAnimationFrame(draw);
 
         return () => {
           if (!isNull(animationId)) {
