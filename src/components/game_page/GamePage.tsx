@@ -1,10 +1,20 @@
 import * as React from 'react';
-import { isNull } from 'util';
+import { isNull, isNumber } from 'util';
 
 import Canvas from '~ui/atoms/canvas/Canvas';
 import Square from '~components/game_page/square/Square';
+import { STATUS } from '~components/game_page/constants';
 
 type Props = {};
+
+const ContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
+const ButtonStyle: React.CSSProperties = {
+  marginTop: '1rem',
+};
 
 const resize = (canvas: HTMLCanvasElement) => {
   // Lookup the size the browser is displaying the canvas.
@@ -66,6 +76,62 @@ const drawMatrix = (cxt: CanvasRenderingContext2D, matrix: Square[][]) => {
   }
 };
 
+const checkOnAliveStatus = (check_square: Square, brothers: Square[]) => {
+  const count_of_alife = brothers.filter((square) => square.status === STATUS.IS_LIFE).length;
+
+  if (check_square.status === STATUS.IS_DEAD) {
+    if (count_of_alife === 3) {
+      return STATUS.IS_LIFE;
+    }
+  }
+  if (check_square.status === STATUS.IS_LIFE) {
+    if (count_of_alife === 3 || count_of_alife === 2) {
+      return STATUS.IS_LIFE;
+    }
+  }
+
+  return STATUS.IS_DEAD;
+};
+
+const getSquareBrothers = (matrix: Square[][], row: number, col: number) => {
+  const min_i = Math.max(0, row - 1);
+  const max_i = Math.min(matrix.length - 1, row + 1);
+  const min_j = Math.max(0, col - 1);
+  const max_j = Math.min(matrix[0].length - 1, col + 1);
+
+  const brothers: Square[] = [];
+
+  for(let i = min_i; i <= max_i; i += 1) {
+    for(let j = min_j; j <= max_j; j += 1) {
+      if (!(i === row && j === col)) {
+        brothers.push(matrix[i][j]);
+      }
+    }
+  }
+
+  return brothers;
+};
+
+const checkMatrixOnAliveStatus = (matrix: Square[][]) => {
+  const changed_sqaures: Square[] = [];
+
+  for(let i = 0, length_i = matrix.length; i < length_i; i += 1) {
+    for(let j = 0, length_j = matrix[i].length; j < length_j; j += 1) {
+      const newStatus = checkOnAliveStatus(matrix[i][j], getSquareBrothers(matrix, i, j));
+
+      if (newStatus !== matrix[i][j].status) {
+        changed_sqaures.push(matrix[i][j]);
+      }
+    }
+  }
+
+  for(let i = 0, length = changed_sqaures.length; i< length; i += 1) {
+    changed_sqaures[i].toggleLifeStatus();
+  }
+
+  return !!changed_sqaures.length;
+};
+
 let last_hover: Square | null = null;
 const checkOnHoverMatrix = (matrix: Square[][], x?: number, y?: number) => {
   if (last_hover?.checkOnHover(x, y)) {
@@ -74,79 +140,145 @@ const checkOnHoverMatrix = (matrix: Square[][], x?: number, y?: number) => {
     last_hover = null;
   }
 
-  for(let i = 0, length_i = matrix.length; i < length_i; i += 1) {
-    for(let j = 0, length_j = matrix[i].length; j < length_j; j += 1) {
-      const isHover = matrix[i][j].checkOnHover(x, y);
+  if (isNumber(x) && isNumber(y)) {
+    for(let i = 0, length_i = matrix.length; i < length_i; i += 1) {
+      for(let j = 0, length_j = matrix[i].length; j < length_j; j += 1) {
+        const isHover = matrix[i][j].checkOnHover(x, y);
 
-      if (isHover) {
-        last_hover = matrix[i][j];
-        return isHover;
+        if (isHover) {
+          last_hover?.checkOnHover(null, null);
+          last_hover = matrix[i][j];
+          return isHover;
+        }
       }
     }
   }
+};
+const clickOnHoverSquare = () => {
+  last_hover?.toggleLifeStatus();
 };
 
 const GamePage: React.FC<Props> = React.memo(
   (props) => {
     const ref = React.useRef<HTMLCanvasElement>();
+    const [startStatus, changeStartStatus] = React.useState(false);
 
     const [gridStroke] = React.useState(3);
-    const [squareSize] = React.useState(40);
-    const [sizeX] = React.useState(9);
-    const [sizeY] = React.useState(9);
+    const [squareSize] = React.useState(20);
+    const [sizeX] = React.useState(21);
+    const [sizeY] = React.useState(21);
 
     const [matrix] = React.useState(() => initMatrix(sizeX, sizeY, squareSize, gridStroke));
 
     React.useEffect(
       () => {
-        const canvas = ref.current;
-        const ctx = canvas.getContext('2d');
+        if (!startStatus) {
+          const canvas = ref.current;
+          const ctx = canvas.getContext('2d');
 
-        canvas.addEventListener('mousemove', (event) => {
-          const { x, y } = event;
+          const handleMouseMove = (event: MouseEvent) => {
+            const { x, y } = event;
+            const canvasBoundingClientRect = canvas.getBoundingClientRect();
 
-          const isHover = checkOnHoverMatrix(matrix, x, y);
-          document.body.style.cursor = isHover ? 'pointer' : 'default';
-        });
-        canvas.addEventListener('mouseout', (event) => {
-          const isHover = checkOnHoverMatrix(matrix, null, null);
-          document.body.style.cursor = isHover ? 'pointer' : 'default';
-        });
+            const isHover = checkOnHoverMatrix(matrix, x - canvasBoundingClientRect.x, y - canvasBoundingClientRect.y);
+            document.body.style.cursor = isHover ? 'pointer' : 'default';
+          };
+          const handleMouseOut = (event: MouseEvent) => {
+            checkOnHoverMatrix(matrix, null, null);
+            document.body.style.cursor = 'default';
+          };
+          const handleClick = (event: MouseEvent) => {
+            clickOnHoverSquare();
+          };
 
-        let animationId: number | null = null;
+          canvas.addEventListener('mousemove', handleMouseMove);
+          canvas.addEventListener('mouseout', handleMouseOut);
+          canvas.addEventListener('click', handleClick);
 
-        const draw = () => {
-          resize(canvas);
+          let animationId: number | null = null;
 
-          animationId = requestAnimationFrame(draw);
+          const draw = () => {
+            animationId = requestAnimationFrame(draw);
+            resize(canvas);
 
-          drawBg(ctx);
-          drawMatrix(ctx, matrix);
+            drawBg(ctx);
+            drawMatrix(ctx, matrix);
 
-        };
+          };
 
-        requestAnimationFrame(draw);
+          requestAnimationFrame(draw);
 
-        return () => {
-          if (!isNull(animationId)) {
-            cancelAnimationFrame(animationId);
-          }
-        };
+          return () => {
+            canvas.removeEventListener('mousemove', handleMouseMove);
+            canvas.removeEventListener('mouseout', handleMouseOut);
+            canvas.removeEventListener('click', handleClick);
+
+            if (!isNull(animationId)) {
+              cancelAnimationFrame(animationId);
+            }
+          };
+        }
       },
       [
-        sizeX,
-        sizeY,
-        squareSize,
-        gridStroke,
+        startStatus,
       ],
     );
 
+    React.useEffect(
+      () => {
+        if (startStatus) {
+          let animationId: number = null;
+          let step = 1;
+          const startTime = performance.now();
+          const canvas = ref.current;
+          const ctx = canvas.getContext('2d');
+
+          const draw = (now: number) => {
+            animationId = requestAnimationFrame(draw);
+
+            if (now > (startTime + step * 500)) {
+              step += 1;
+              const hasChanges = checkMatrixOnAliveStatus(matrix);
+              if (hasChanges) {
+                resize(canvas);
+
+                drawBg(ctx);
+                drawMatrix(ctx, matrix);
+              } else {
+                changeStartStatus(false);
+              }
+            }
+          };
+
+          requestAnimationFrame(draw);
+
+          return () => {
+            if (!isNull(animationId)) {
+              cancelAnimationFrame(animationId);
+            }
+          };
+        }
+      },
+      [startStatus],
+    );
+
     return (
-      <Canvas
-        ref={ref}
-        width={getCanvasSize(squareSize, gridStroke, sizeX)}
-        height={getCanvasSize(squareSize, gridStroke, sizeY)}
-      />
+      <div style={ContainerStyle}>
+        <Canvas
+          ref={ref}
+          width={getCanvasSize(squareSize, gridStroke, sizeX)}
+          height={getCanvasSize(squareSize, gridStroke, sizeY)}
+        />
+        <div>
+          <button style={ButtonStyle} onClick={() => changeStartStatus((oldState) => !oldState)}>
+            {
+              startStatus
+                ? 'Pause'
+                : 'Start'
+            }
+          </button>
+        </div>
+      </div>
     );
   },
 );
