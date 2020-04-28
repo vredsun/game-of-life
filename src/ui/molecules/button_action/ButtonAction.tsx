@@ -10,7 +10,7 @@ const ButtonAction: React.FC<Props> = React.memo(
   ({ status, ...props }) => {
 
     return (
-      <Button {...props}>
+      <Button {...props} aria-label="Старт/ Пауза">
         {
           status === 'play'
             ? <IoIosPause />

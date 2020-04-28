@@ -5,6 +5,7 @@ import Link from '~ui/atoms/link/Link';
 
 type Props = {
   href: string;
+  rel: string;
 };
 
 const H1 = styled.h1`

@@ -8,7 +8,7 @@ type Props = {
 const ButtonTrash: React.FC<Props> = React.memo(
   (props) => {
     return (
-      <Button {...props}>
+      <Button {...props} aria-label="Очистить поле">
         <IoIosTrash />
       </Button>
     );

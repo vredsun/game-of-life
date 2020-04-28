@@ -9,7 +9,7 @@ const ButtonSync: React.FC<Props> = React.memo(
   (props) => {
 
     return (
-      <Button {...props}>
+      <Button {...props} aria-label="Рандомная генерация значений">
         <IoIosSync />
       </Button>
     );
