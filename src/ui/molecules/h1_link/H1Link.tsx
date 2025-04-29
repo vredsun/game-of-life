@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import styled from '~styles';
+import styled from 'styled-components';
 import Link from '~ui/atoms/link/Link';
 
 type Props = {
   href: string;
   rel: string;
-};
+} & React.PropsWithChildren;
 
 const H1 = styled.h1`
   font-size: 3rem;

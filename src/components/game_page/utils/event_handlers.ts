@@ -1,8 +1,8 @@
 
-import { isNumber } from 'util';
+import isNumber from 'lodash/isNumber';
 
-import Square from '~components/game_page/square/Square';
 import { STATUS } from '~components/game_page/constants';
+import Square from '~components/game_page/square/Square';
 
 let last_hover: Square | null = null;
 

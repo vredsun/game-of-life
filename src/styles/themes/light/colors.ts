@@ -1,7 +1,7 @@
-import palette from '~styles/themes/palette';
-import { IStyledComponentsTheme } from '~styles/themes/types';
+import { DefaultTheme } from 'styled-components';
+import palette from '../../themes/palette';
 
-const colors: IStyledComponentsTheme = {
+const colors: Pick<DefaultTheme, 'colors'> = {
   colors: {
     ...palette,
     left_menu: palette.white,

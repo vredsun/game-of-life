@@ -1,7 +1,7 @@
-import { IStyledComponentsTheme } from '~styles/themes/types';
+import { DefaultTheme } from 'styled-components';
 import colors from './colors';
 
-const lightTheme: IStyledComponentsTheme = {
+const lightTheme: DefaultTheme = {
   ...colors,
 };
 

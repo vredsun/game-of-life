@@ -1,4 +1,4 @@
-import styled from '~styles';
+import styled from 'styled-components';
 
 type Props = {
   version: string;

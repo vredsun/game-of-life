@@ -1,10 +1,10 @@
+import isNil from 'lodash/isNil';
 import * as React from 'react';
-import { isNull } from 'util';
 
-import Square from '~components/game_page/square/Square';
 import { STATUS } from '~components/game_page/constants';
+import Square from '~components/game_page/square/Square';
+import { drawBg, drawMatrix, resize } from '~components/game_page/utils/draw';
 import { checkOnHoverMatrix, clickOnHoverSquare } from '~components/game_page/utils/event_handlers';
-import { resize, drawBg, drawMatrix } from '~components/game_page/utils/draw';
 
 const useCanvasPauseInteractive = (ref_canvas: React.MutableRefObject<HTMLCanvasElement>, play_status: 'play' | 'pause', matrix: Square[][]) => {
   React.useEffect(
@@ -72,7 +72,7 @@ const useCanvasPauseInteractive = (ref_canvas: React.MutableRefObject<HTMLCanvas
           canvas.removeEventListener('mousedown', handleMouseDown);
           canvas.removeEventListener('mouseup', handleMouseUp);
 
-          if (!isNull(animationId)) {
+          if (!isNil(animationId)) {
             cancelAnimationFrame(animationId);
           }
         };

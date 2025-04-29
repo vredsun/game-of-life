@@ -1,9 +1,9 @@
+import isNull from 'lodash/isNull';
 import * as React from 'react';
-import { isNull } from 'util';
 
 import Square from '~components/game_page/square/Square';
-import { resize, drawBg, drawMatrix } from '~components/game_page/utils/draw';
 import { checkMatrixOnAliveStatus } from '~components/game_page/utils';
+import { drawBg, drawMatrix, resize } from '~components/game_page/utils/draw';
 
 const useCanvasPlay = (ref_canvas: React.MutableRefObject<HTMLCanvasElement>, play_status: 'play' | 'pause', matrix: Square[][], changeStartStatus: (startStatus: boolean) => void) => {
   React.useEffect(

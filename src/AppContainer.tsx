@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { hot } from 'react-hot-loader/root';
 
 const ApmThemeProvider = React.lazy(() => (
   import(/* webpackChunkName: "ApmThemeProvider" */ '~styles/ApmThemeProvider')
@@ -12,9 +11,9 @@ const GlobalStyle = React.lazy(() => (
   import(/* webpackChunkName: "GlobalStyle" */ '~styles/styles-global')
 ));
 
-const App: React.FC<{}> = () => {
+const App: React.FC<React.PropsWithChildren> = () => {
   return (
-    <React.Suspense fallback="Загрузка...">
+    <React.Suspense fallback={null}>
       <ApmThemeProvider>
         <GlobalStyle />
         <RouterContainer />
@@ -23,5 +22,5 @@ const App: React.FC<{}> = () => {
   );
 };
 
-export default hot(() => <App />);
+export default App;
 

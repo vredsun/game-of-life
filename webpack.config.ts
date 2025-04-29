@@ -1,9 +1,9 @@
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import * as path from 'path';
 import * as webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
 
 console.info(`[webpack.config] NODE_ENV: ${process.env.NODE_ENV}`);
 console.info(`[webpack.config] platform: ${process.platform}`);
@@ -21,7 +21,6 @@ const PATH_TO_INDEX_FILE = path.join(DIR_APP_SRC, 'index.tsx');
 let BUILD = {
   output: {
     path: DIR_APP_DIST,
-    publicPath: process.env.PUBLIC_PATH,
   },
   htmlTemplateName: path.join(DIR_APP_SRC, 'html', 'index.hbs'),
 };
@@ -29,14 +28,12 @@ let BUILD = {
 const getPlugins = () => {
   const plugins = [
     new ForkTsCheckerWebpackPlugin(),
-    new webpack.NamedModulesPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
       inject: 'head',
       scriptLoading: 'defer',
       title: 'Игра "Жизнь"',
       template: BUILD.htmlTemplateName,
-      publicPath: process.env.PUBLIC_PATH,
       hash: true,
       meta: {
         'mobile-web-app-capable': 'yes',
@@ -60,22 +57,20 @@ const getPlugins = () => {
     // some only prod
   }
 
-  if (false) {
-    plugins.push(
-      new BundleAnalyzerPlugin({
-        analyzerMode: 'static'
-      }),
-    );
-  }
 
   return plugins;
+};
+
+const devServer: DevServerConfiguration = {
+  static: './dist',
+  port: 3000,
+  hot: true,
 };
 
 const config: webpack.Configuration = {
   mode: isDevelopment ? 'development' : 'production',
   // mode: 'development',
   node: {
-    fs: 'empty',
     __filename: true,
     __dirname: true
   },
@@ -83,31 +78,16 @@ const config: webpack.Configuration = {
   entry: [
     'core-js/stable',
     'regenerator-runtime/runtime',
-    'react-hot-loader/patch',
     'whatwg-fetch',
     PATH_TO_INDEX_FILE,
   ],
   output: {
     path: BUILD.output.path,
-    publicPath: BUILD.output.publicPath,
     filename: isDevelopment ? '[name].bundle.js' : 'app.[name].[contenthash].js',
   },
-  devServer: {
-    historyApiFallback: true,
-    contentBase: './dist',
-    port: 3000,
-    hot: true,
-    noInfo: true,
-    quiet: false,
-    inline: true,
-    lazy: false,
-    public: '',
-    host: '0.0.0.0',
-  },
+  devServer,
   resolve: {
     alias: {
-      'react-dom': isDevelopment ? '@hot-loader/react-dom' : 'react-dom',
-
       '~components': path.join(DIR_APP_SRC, 'components'),
       '~ui': path.join(DIR_APP_SRC, 'ui'),
       '~styles': path.join(DIR_APP_SRC, 'styles'),
@@ -125,6 +105,7 @@ const config: webpack.Configuration = {
   optimization: {
     noEmitOnErrors: true,
     usedExports: true,
+    runtimeChunk: 'single',
   },
   module: {
     rules: [

@@ -1,6 +1,6 @@
-import { STATUS, STATUS_COLOR_RECORD, STATUS_HOVER_COLOR_RECORD } from '~components/game_page/constants';
-import { isNumber } from 'util';
+import isNumber from 'lodash/isNumber';
 import { darken } from 'polished';
+import { STATUS, STATUS_COLOR_RECORD, STATUS_HOVER_COLOR_RECORD } from '~components/game_page/constants';
 
 type Props = {
   matrix: any[][];
@@ -55,7 +55,6 @@ class Square {
       return this._is_hover = false;
     }
 
-    return false;
   }
 
   toggleLifeStatus() {

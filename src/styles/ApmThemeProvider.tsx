@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ThemeProvider } from '~styles';
-import themes from '~styles/themes';
+import { ThemeProvider } from 'styled-components';
+import themes from './themes';
 
-type Props = {};
+type Props = React.PropsWithChildren;
 
 const ApmThemeProvider: React.FC<Props> = React.memo(
   (props) => {

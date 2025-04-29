@@ -1,10 +1,12 @@
 import * as React from 'react';
-import * as ReactDOM  from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import AppContainer from './AppContainer';
 
-ReactDOM.render(
+const domNode = document.getElementById('root');
+const root = createRoot(domNode);
+
+root.render(
   <React.Suspense fallback={<div></div>}>
     <AppContainer/>
   </React.Suspense>,
-  document.querySelector('#root'),
 );

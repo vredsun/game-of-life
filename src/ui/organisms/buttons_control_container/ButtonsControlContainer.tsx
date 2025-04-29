@@ -1,9 +1,9 @@
 
 import * as React from 'react';
 import FlexContainer from '~ui/atoms/flex_container/FlexContainer';
-import ButtonTrash from '~ui/molecules/button_trash/ButtonTrash';
-import ButtonSync from '~ui/molecules/button_sync/ButtonSync';
 import ButtonAction from '~ui/molecules/button_action/ButtonAction';
+import ButtonSync from '~ui/molecules/button_sync/ButtonSync';
+import ButtonTrash from '~ui/molecules/button_trash/ButtonTrash';
 
 type Props = {
   handleTrashClick: () => void;
@@ -24,6 +24,7 @@ const ButtonsControlContainer: React.FC<Props> = React.memo(
         <ButtonSync
           disabled={props.status === 'play'}
           onClick={props.handleSyncClick}
+          isInverseColor
         />
         <ButtonAction
           onClick={props.handlePlayClick}

@@ -1,4 +1,4 @@
-import { createGlobalStyle, css } from '~styles';
+import { createGlobalStyle, css } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
   ${({ theme }) => css`

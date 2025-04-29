@@ -1,4 +1,4 @@
-import styled, { css } from '~styles';
+import styled, { css } from 'styled-components';
 
 export type ButtonProps = {
   onClick?: (event: any) => void;
@@ -36,10 +36,9 @@ export const getButtonCss = (isActive: boolean, isInverseColor: boolean, disable
   outline: none;
 
   border-radius: 6px;
-  padding: 6px 15px;
+  padding: 6px 12px;
   height: auto;
-  font-size: 0.9rem;
-  min-width: 120px;
+  /* min-width: 120px; */
 
   font-size: 1rem;
   margin: 0.5rem;
