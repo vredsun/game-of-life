@@ -1,6 +1,6 @@
 {
   "name": "game-of-life",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "private": true,
   "description": "",
   "main": "./dist/client/index.js",
