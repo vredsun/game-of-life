@@ -5,5 +5,6 @@
 # Roadmap
 
 - [] Different colors
+- [] Other main color
 - [] Mobile
 - [] Multiplay
