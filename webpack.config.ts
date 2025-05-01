@@ -32,7 +32,7 @@ const getPlugins = () => {
     new HtmlWebpackPlugin({
       inject: 'head',
       scriptLoading: 'defer',
-      title: 'Игра "Жизнь"',
+      title: 'Game of Life"',
       template: BUILD.htmlTemplateName,
       hash: true,
       meta: {
