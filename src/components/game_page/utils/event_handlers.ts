@@ -20,10 +20,10 @@ export const setHalfHoverSquare = (isHover: boolean, matrix: Square[][], x?: num
 export const checkOnHoverMatrix = (matrix: Square[][], x?: number, y?: number) => {
   if (last_hover?.checkOnHover(x, y)) {
     return last_hover;
-  } else {
-    setHalfHoverSquare(false, matrix, last_hover?._x, last_hover?._y);
-    last_hover = null;
   }
+  
+  setHalfHoverSquare(false, matrix, last_hover?._x, last_hover?._y);
+  last_hover = null;
 
   if (isNumber(x) && isNumber(y)) {
     for(let i = 0, length_i = matrix.length; i < length_i; i += 1) {

@@ -17,12 +17,12 @@ const ButtonsControlContainer: React.FC<Props> = React.memo(
     return (
       <FlexContainer>
         <ButtonTrash
-          disabled={props.status === 'play'}
+          // disabled={props.status === 'play'}
           onClick={props.handleTrashClick}
           isInverseColor
         />
         <ButtonSync
-          disabled={props.status === 'play'}
+          // disabled={props.status === 'play'}
           onClick={props.handleSyncClick}
           isInverseColor
         />

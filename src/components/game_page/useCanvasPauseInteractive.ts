@@ -12,6 +12,7 @@ const useCanvasPauseInteractive = (ref_canvas: React.MutableRefObject<HTMLCanvas
       if (play_status === 'pause') {
         const canvas = ref_canvas.current;
         const ctx = canvas.getContext('2d');
+
         let isMouseDown = false;
         let isNewStatusOnMouse: STATUS = null;
 
@@ -19,13 +20,13 @@ const useCanvasPauseInteractive = (ref_canvas: React.MutableRefObject<HTMLCanvas
           const { x, y } = event;
           const canvasBoundingClientRect = canvas.getBoundingClientRect();
 
+          // 😱😱😱😱😱
           const isHoverSquare = checkOnHoverMatrix(matrix, x - canvasBoundingClientRect.x, y - canvasBoundingClientRect.y);
           document.body.style.cursor = isHoverSquare ? 'pointer' : 'default';
 
           if (isMouseDown) {
             clickOnHoverSquare(isNewStatusOnMouse);
           }
-
         };
         const handleMouseOut = (event: MouseEvent) => {
           checkOnHoverMatrix(matrix, null, null);

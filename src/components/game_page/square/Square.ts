@@ -80,9 +80,8 @@ class Square {
   get bg_color() {
     if (this._is_hover || this._is_hover_in_cursor_line) {
       return darken(0.2, '#F7F7F7');
-    } else {
-      return '#F7F7F7';
     }
+    return darken(0.1, '#F7F7F7');
   }
 
   renderBg(ctx: CanvasRenderingContext2D) {

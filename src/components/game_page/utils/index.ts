@@ -1,5 +1,5 @@
-import Square from '~components/game_page/square/Square';
 import { STATUS } from '~components/game_page/constants';
+import Square from '~components/game_page/square/Square';
 
 const getRandomValue = <T>(values: T[]) => {
   const min = 0;
@@ -17,6 +17,7 @@ export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gri
 
   for(let x = 0; x < sizeX; x += 1) {
     newMatrix.push([]);
+
     for(let y = 0; y < sizeY; y += 1) {
       const status = random ? getRandomStatus() : undefined;
 

@@ -50,7 +50,10 @@ const GamePage: React.FC<Props> = React.memo(
           height={getCanvasSize(squareSize, sizeY)}
         />
         <ButtonsControlContainer
-          handleTrashClick={() => setMatrix(initMatrix(sizeX, sizeY, squareSize, gridStroke))}
+          handleTrashClick={() => {
+            changeStartStatus(false)
+            setMatrix(initMatrix(sizeX, sizeY, squareSize, gridStroke));
+          }}
           handleSyncClick={() => setMatrix(initMatrix(sizeX, sizeY, squareSize, gridStroke, true))}
           handlePlayClick={() => changeStartStatus((oldState) => !oldState)}
           status={startStatus ? 'play' : 'pause'}
