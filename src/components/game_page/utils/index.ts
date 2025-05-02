@@ -10,10 +10,10 @@ const getRandomValue = <T>(values: T[]) => {
 };
 
 const getRandomStatus = () => {
-  return getRandomValue([STATUS.IS_DEAD, STATUS.IS_LIFE]);
+  return getRandomValue([STATUS.IS_DEAD, STATUS.IS_DEAD, STATUS.IS_LIFE]);
 };
 
-export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gridStroke: number, shouldGetRandomColor?: boolean) => {
+export const initMatrix = (activeColor: keyof DefaultTheme['colors']['cellColors'], sizeX: number, sizeY: number, squareSize: number, gridStroke: number, shouldGetRandomColor?: boolean) => {
   const newMatrix: Square[][] = [];
 
   for(let x = 0; x < sizeX; x += 1) {
@@ -23,7 +23,7 @@ export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gri
       const status = shouldGetRandomColor ? getRandomStatus() : undefined;
 
       newMatrix[x][y] = new Square({
-        baseColor: 'red',
+        baseColor: activeColor,
         gridStroke,
         matrix: newMatrix,
         x,

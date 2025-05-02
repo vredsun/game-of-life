@@ -29,7 +29,7 @@ const GamePage: React.FC<Props> = React.memo(
     const [sizeX] = React.useState(90);
     const [sizeY] = React.useState(45);
 
-    const [matrix, setMatrix] = React.useState(() => initMatrix(sizeX, sizeY, squareSize, gridStroke, true));
+    const [matrix, setMatrix] = React.useState(() => initMatrix(activeColor, sizeX, sizeY, squareSize, gridStroke, true));
 
     useCanvasPauseInteractive(
       ref,
@@ -60,11 +60,11 @@ const GamePage: React.FC<Props> = React.memo(
         <ButtonsControlContainer
           handleTrashClick={() => {
             changeStartStatus(false)
-            setMatrix(initMatrix(sizeX, sizeY, squareSize, gridStroke));
+            setMatrix(initMatrix(activeColor, sizeX, sizeY, squareSize, gridStroke));
           }}
           handleSyncClick={() => {
-            setMatrix(initMatrix(sizeX, sizeY, squareSize, gridStroke, true))
             changeStartStatus(false);
+            setMatrix(initMatrix(activeColor, sizeX, sizeY, squareSize, gridStroke, true))
           }}
           handlePlayClick={() => changeStartStatus((oldState) => !oldState)}
           status={startStatus ? 'play' : 'pause'}
