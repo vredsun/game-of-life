@@ -9,6 +9,12 @@ const colors: Pick<DefaultTheme, 'colors'> = {
     card: palette.white,
     route_place: palette.color_secondary_shadow,
     route_place_title: palette.white,
+
+    cellColors: {
+      red: 'red',
+      yellow: 'red',
+      black: 'red',
+    },
   },
 };
 

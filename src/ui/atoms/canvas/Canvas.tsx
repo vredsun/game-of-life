@@ -5,7 +5,7 @@ type Props = {
 
 const Canvas = styled.canvas<Props>`
   border-radius: 4px;
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.25);
+  border: 2px solid black;
 `;
 
 export default Canvas;

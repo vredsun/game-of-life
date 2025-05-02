@@ -8,7 +8,7 @@
       "~*": ["./src/*"]
     },
     "allowJs": true,
-    "target": "es5",
+    "target": "ES2015",
     "module": "commonjs",
     "declaration": false,
     "allowSyntheticDefaultImports": true,

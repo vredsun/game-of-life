@@ -1,3 +1,4 @@
+import { DefaultTheme } from 'styled-components';
 import { STATUS } from '~components/game_page/constants';
 import Square from '~components/game_page/square/Square';
 
@@ -9,19 +10,20 @@ const getRandomValue = <T>(values: T[]) => {
 };
 
 const getRandomStatus = () => {
-  return getRandomValue([STATUS.IS_DEAD, STATUS.IS_DEAD, STATUS.IS_LIFE]);
+  return getRandomValue([STATUS.IS_DEAD, STATUS.IS_LIFE]);
 };
 
-export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gridStroke: number, random?: boolean) => {
+export const initMatrix = (sizeX: number, sizeY: number, squareSize: number, gridStroke: number, shouldGetRandomColor?: boolean) => {
   const newMatrix: Square[][] = [];
 
   for(let x = 0; x < sizeX; x += 1) {
     newMatrix.push([]);
 
     for(let y = 0; y < sizeY; y += 1) {
-      const status = random ? getRandomStatus() : undefined;
+      const status = shouldGetRandomColor ? getRandomStatus() : undefined;
 
       newMatrix[x][y] = new Square({
+        baseColor: 'red',
         gridStroke,
         matrix: newMatrix,
         x,
@@ -50,7 +52,7 @@ export const getSquareBrothers = (matrix: Square[][], row: number, col: number) 
 
   for(let i = min_i; i <= max_i; i += 1) {
     for(let j = min_j; j <= max_j; j += 1) {
-      if (!(i === row && j === col)) {
+      if (!(i === row && j === col) && matrix[row][col].baseColor === matrix[i][j].baseColor) {
         brothers.push(matrix[i][j]);
       }
     }
@@ -60,7 +62,7 @@ export const getSquareBrothers = (matrix: Square[][], row: number, col: number) 
 };
 
 export const checkOnAliveStatus = (check_square: Square, brothers: Square[]) => {
-  const count_of_alife = brothers.filter((square) => square.status === STATUS.IS_LIFE).length;
+  const count_of_alife = brothers.filter((square) => square.status === STATUS.IS_LIFE && square.baseColor === check_square.baseColor).length;
 
   if (check_square.status === STATUS.IS_DEAD) {
     if (count_of_alife === 3) {
@@ -76,7 +78,7 @@ export const checkOnAliveStatus = (check_square: Square, brothers: Square[]) => 
   return STATUS.IS_DEAD;
 };
 
-export const checkMatrixOnAliveStatus = (matrix: Square[][]) => {
+export const checkMatrixOnAliveStatus = (activeColor: keyof DefaultTheme['colors']['cellColors'], matrix: Square[][]) => {
   const changed_sqaures: Square[] = [];
 
   for(let i = 0, length_i = matrix.length; i < length_i; i += 1) {
@@ -90,7 +92,7 @@ export const checkMatrixOnAliveStatus = (matrix: Square[][]) => {
   }
 
   for(let i = 0, length = changed_sqaures.length; i< length; i += 1) {
-    changed_sqaures[i].toggleLifeStatus();
+    changed_sqaures[i].toggleLifeStatus(changed_sqaures[i].baseColor);
   }
 
   return !!changed_sqaures.length;

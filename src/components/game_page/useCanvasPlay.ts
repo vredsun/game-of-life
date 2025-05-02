@@ -1,11 +1,12 @@
 import isNull from 'lodash/isNull';
 import * as React from 'react';
+import { DefaultTheme } from 'styled-components';
 
 import Square from '~components/game_page/square/Square';
 import { checkMatrixOnAliveStatus } from '~components/game_page/utils';
 import { drawBg, drawMatrix, resize } from '~components/game_page/utils/draw';
 
-const useCanvasPlay = (ref_canvas: React.MutableRefObject<HTMLCanvasElement>, play_status: 'play' | 'pause', matrix: Square[][], changeStartStatus: (startStatus: boolean) => void) => {
+const useCanvasPlay = (activeColor: keyof DefaultTheme['colors']['cellColors'], ref_canvas: React.MutableRefObject<HTMLCanvasElement>, play_status: 'play' | 'pause', matrix: Square[][], changeStartStatus: (startStatus: boolean) => void) => {
   React.useEffect(
     () => {
       if (play_status === 'play') {
@@ -20,7 +21,7 @@ const useCanvasPlay = (ref_canvas: React.MutableRefObject<HTMLCanvasElement>, pl
 
           if (now > (startTime + step * 100)) {
             step += 1;
-            const hasChanges = checkMatrixOnAliveStatus(matrix);
+            const hasChanges = checkMatrixOnAliveStatus(activeColor, matrix);
             if (hasChanges) {
               resize(canvas);
 

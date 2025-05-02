@@ -17,6 +17,12 @@ declare module 'styled-components' {
       color_secondary_primary: string;
       bg_and_disabled_buttons: string;
       color_secondary_primary_80: string;
+
+      cellColors: {
+        red: string;
+        yellow: string;
+        black: string;
+      }
     };
   }
 }

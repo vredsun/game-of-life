@@ -1,6 +1,8 @@
 import isNumber from 'lodash/isNumber';
 import { darken } from 'polished';
-import { STATUS, STATUS_COLOR_RECORD, STATUS_HOVER_COLOR_RECORD } from '~components/game_page/constants';
+import { DefaultTheme } from 'styled-components';
+import { STATUS } from '~components/game_page/constants';
+import { getDeadColor, getLifeColor } from '../utils/colors';
 
 type Props = {
   matrix: any[][];
@@ -8,6 +10,7 @@ type Props = {
   y: number;
   coords: number[];
   gridStroke: number;
+  baseColor: keyof DefaultTheme['colors']['cellColors'];
 
   status?: STATUS;
 };
@@ -24,6 +27,8 @@ const checkCoordIndside = (coords: number[], x?: number, y?: number) => {
 };
 
 class Square {
+  baseColor: keyof DefaultTheme['colors']['cellColors'];
+
   _is_hover: boolean;
   _is_hover_in_cursor_line: boolean;
   _coords: number[];
@@ -42,6 +47,8 @@ class Square {
     this._is_hover = false;
     this._is_hover_in_cursor_line = false;
     this.gridStroke = props.gridStroke;
+
+    this.baseColor = props.baseColor;
   }
 
   changeHalfHover(is_hover: boolean) {
@@ -57,24 +64,23 @@ class Square {
 
   }
 
-  toggleLifeStatus() {
-    let new_status = this.status;
+  toggleLifeStatus(activeColor: keyof DefaultTheme['colors']['cellColors']) {
+    if (this.baseColor !== activeColor) {
+      this.baseColor = activeColor;
+      this.status = STATUS.IS_LIFE;
+      
+      return;
+    }
 
-    if (this.status === STATUS.IS_DEAD) {
-      new_status = STATUS.IS_LIFE;
-    }
-    if (this.status === STATUS.IS_LIFE) {
-      new_status = STATUS.IS_DEAD;
-    }
-    this.status = new_status;
+    this.status = this.status === STATUS.IS_DEAD ? STATUS.IS_LIFE : STATUS.IS_DEAD;
   }
 
   get color() {
-    if (!this._is_hover) {
-      return STATUS_COLOR_RECORD[this.status];
-    } else {
-      return STATUS_HOVER_COLOR_RECORD[this.status];
+    if (this.status === STATUS.IS_DEAD) {
+      return getDeadColor(this._is_hover);
     }
+
+    return getLifeColor(this._is_hover, this.baseColor);
   }
 
   get bg_color() {

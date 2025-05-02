@@ -1,5 +1,6 @@
 
 import isNumber from 'lodash/isNumber';
+import { DefaultTheme } from 'styled-components';
 
 import { STATUS } from '~components/game_page/constants';
 import Square from '~components/game_page/square/Square';
@@ -44,12 +45,12 @@ export const checkOnHoverMatrix = (matrix: Square[][], x?: number, y?: number) =
   }
 };
 
-export const clickOnHoverSquare = (check_status?: STATUS) => {
+export const clickOnHoverSquare = (activeColor: keyof DefaultTheme['colors']['cellColors'], check_status?: STATUS) => {
   if (check_status) {
     if (check_status === last_hover?.status) {
-      last_hover?.toggleLifeStatus();
+      last_hover?.toggleLifeStatus(activeColor);
     }
   } else {
-    last_hover?.toggleLifeStatus();
+    last_hover?.toggleLifeStatus(activeColor);
   }
 };
