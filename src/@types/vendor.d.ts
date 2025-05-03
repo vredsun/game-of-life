@@ -1,5 +1,3 @@
-declare let __DEV__: string;
-declare let _VERSION_: string;
 declare let NODE_ENV: string;
 declare let _HASH_: string;
 declare let _COMMIT_DATE_: string;

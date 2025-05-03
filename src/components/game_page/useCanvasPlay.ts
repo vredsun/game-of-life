@@ -1,51 +1,62 @@
 import isNull from 'lodash/isNull';
 import * as React from 'react';
-import { DefaultTheme } from 'styled-components';
 
-import Square from '~components/game_page/square/Square';
-import { checkMatrixOnAliveStatus } from '~components/game_page/utils';
-import { drawBg, drawMatrix, resize } from '~components/game_page/utils/draw';
+import { FRAME_TIME_MS } from './constants';
+import Grid from './matrix/Grid';
 
-const useCanvasPlay = (activeColor: keyof DefaultTheme['colors']['cellColors'], ref_canvas: React.MutableRefObject<HTMLCanvasElement>, play_status: 'play' | 'pause', matrix: Array<Array<Square>>, changeStartStatus: (startStatus: boolean) => void) => {
+type UseCanvasPlayParams = {
+  canvas: HTMLCanvasElement | null;
+  grid: Grid | null;
+}
+
+const useCanvasPlay = ({ canvas, grid }: UseCanvasPlayParams) => {
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  
   React.useEffect(
     () => {
-      if (play_status === 'play') {
-        let animationId: number = null;
-        let step = 1;
-        const startTime = performance.now();
-        const canvas = ref_canvas.current;
-        const ctx = canvas.getContext('2d');
+      const ctx = canvas?.getContext('2d');
+      if (!isPlaying || !ctx || !grid || !canvas) {
+        return;
+      }
+      
+      let prevTime = performance.now();
+      let animationId: number | null = null;
 
-        const draw = (now: number) => {
-          animationId = requestAnimationFrame(draw);
-
-          if (now > (startTime + step * 100)) {
-            step += 1;
-            const hasChanges = checkMatrixOnAliveStatus(activeColor, matrix);
-            if (hasChanges) {
-              resize(canvas);
-
-              drawBg(ctx);
-              drawMatrix(ctx, matrix);
-            } else {
-              changeStartStatus(false);
-            }
-          }
-        };
+      const draw = (now: number) => {
         animationId = requestAnimationFrame(draw);
 
-        return () => {
-          if (!isNull(animationId)) {
+        if (now - prevTime > FRAME_TIME_MS) {
+          prevTime = now;
+
+          const hasChanges = grid.checkOnAlive();
+
+          if (!hasChanges) {
             cancelAnimationFrame(animationId);
+            setIsPlaying(false);
+
+            return;
           }
-        };
-      }
+
+          grid.render();
+
+          return;
+        }
+      };
+      animationId = requestAnimationFrame(draw);
+
+      return () => {
+        if (!isNull(animationId)) {
+          cancelAnimationFrame(animationId);
+        }
+      };
     },
     [
-      play_status === 'play',
-      matrix,
+      isPlaying,
+      grid,
     ],
   );
+
+  return [isPlaying, setIsPlaying] as const;
 };
 
 export default useCanvasPlay;

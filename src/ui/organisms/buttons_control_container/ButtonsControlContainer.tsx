@@ -9,7 +9,7 @@ type Props = {
   handleTrashClick: () => void;
   handleSyncClick: () => void;
   handlePlayClick: () => void;
-  status: 'play' | 'pause';
+  isPlaying: boolean;
 };
 
 const ButtonsControlContainer: React.FC<Props> = React.memo(
@@ -26,7 +26,7 @@ const ButtonsControlContainer: React.FC<Props> = React.memo(
         />
         <ButtonAction
           onClick={props.handlePlayClick}
-          status={props.status}
+          isPlaying={props.isPlaying}
         />
       </FlexContainer>
     );

@@ -1,9 +1,10 @@
 
-import styled, { css, DefaultTheme } from 'styled-components';
+import styled, { css } from 'styled-components';
+import { CellColorName } from '~components/game_page/matrix/cell/types';
 
 type Props = {
   isActive: boolean;
-  color: keyof DefaultTheme['colors']['cellColors'];
+  color: CellColorName;
 };
 
 const ColorItem = styled.div<Props>`

@@ -1,91 +1,80 @@
-import isNil from 'lodash/isNil';
-import * as React from 'react';
-import { DefaultTheme } from 'styled-components';
+import { isNil } from "lodash";
+import React from "react";
+import { GRID_CELL_SIZE } from "./constants";
+import Grid from "./matrix/Grid";
+import { CellColorName } from "./matrix/cell/types";
 
-import { STATUS } from '~components/game_page/constants';
-import Square from '~components/game_page/square/Square';
-import { drawBg, drawMatrix, resize } from '~components/game_page/utils/draw';
-import { checkOnHoverMatrix, clickOnHoverSquare } from '~components/game_page/utils/event_handlers';
+type Params = {
+  activeColor: CellColorName;
+  canvas: HTMLCanvasElement | null;
+  grid: Grid | null;
+  isPlaying: boolean;
+};
 
-const useCanvasPauseInteractive = (ref_canvas: React.RefObject<HTMLCanvasElement>, activeColor: keyof DefaultTheme['colors']['cellColors'], play_status: 'play' | 'pause', matrix: Array<Array<Square>>) => {
+
+const useCanvasPauseInteractive = ({ canvas, activeColor, grid, isPlaying }: Params) => {
   React.useEffect(
     () => {
-      if (play_status === 'pause') {
-        const canvas = ref_canvas.current;
-        const ctx = canvas.getContext('2d');
+      const ctx = canvas?.getContext('2d');
 
-        let isMouseDown = false;
-        let isNewStatusOnMouse: STATUS = null;
-
-        const handleMouseMove = (event: MouseEvent) => {
-          const { x, y } = event;
-          const canvasBoundingClientRect = canvas.getBoundingClientRect();
-
-          // 😱😱😱😱😱
-          const isHoverSquare = checkOnHoverMatrix(matrix, x - canvasBoundingClientRect.x, y - canvasBoundingClientRect.y);
-          document.body.style.cursor = isHoverSquare ? 'pointer' : 'default';
-
-          if (isMouseDown) {
-            clickOnHoverSquare(activeColor, isNewStatusOnMouse);
-          }
-        };
-        const handleMouseOut = () => {
-          checkOnHoverMatrix(matrix, null, null);
-          handleMouseUp();
-          document.body.style.cursor = 'default';
-        };
-        const handleMouseDown = (event: MouseEvent) => {
-          const { x, y } = event;
-          const canvasBoundingClientRect = canvas.getBoundingClientRect();
-
-          const isHoverSquare = checkOnHoverMatrix(matrix, x - canvasBoundingClientRect.x, y - canvasBoundingClientRect.y);
-
-          isMouseDown = true;
-          isNewStatusOnMouse = isHoverSquare.status;
-        };
-        const handleMouseUp = () => {
-          clickOnHoverSquare(activeColor, isNewStatusOnMouse);
-
-          isMouseDown = false;
-          isNewStatusOnMouse = null;
-        };
-
-        canvas.addEventListener('mousemove', handleMouseMove);
-        canvas.addEventListener('mouseout', handleMouseOut);
-
-        canvas.addEventListener('mousedown', handleMouseDown);
-        canvas.addEventListener('mouseup', handleMouseUp);
-
-        let animationId: number | null = null;
-
-        const draw = () => {
-          animationId = requestAnimationFrame(draw);
-          resize(canvas);
-
-          drawBg(ctx);
-          drawMatrix(ctx, matrix);
-        };
-
-        requestAnimationFrame(draw);
-
-        return () => {
-          canvas.removeEventListener('mousemove', handleMouseMove);
-          canvas.removeEventListener('mouseout', handleMouseOut);
-          canvas.removeEventListener('mousedown', handleMouseDown);
-          canvas.removeEventListener('mouseup', handleMouseUp);
-
-          if (!isNil(animationId)) {
-            cancelAnimationFrame(animationId);
-          }
-        };
+      if (isPlaying || !canvas || !ctx || !grid) {
+        return;
       }
+
+      const handleMouseMove = (event: MouseEvent) => {
+        const { x, y } = event;
+        const canvasBoundingClientRect = canvas.getBoundingClientRect();
+
+        grid.hoverCell({
+          activeColor,
+          row: (x - canvasBoundingClientRect.x) / GRID_CELL_SIZE,
+          column: (y - canvasBoundingClientRect.y) / GRID_CELL_SIZE,
+        });
+      }
+
+      const handleMouseOut = () => {
+        grid.resetHoveredCell();
+      }
+
+      const handleMouseDown = () => {
+        grid.fixHoveredCellStatus(activeColor);
+      }
+
+      const handleMouseUp = () => {
+        grid.resetHoveredCellStatus()
+      }
+
+      canvas.addEventListener('mousemove', handleMouseMove);
+      canvas.addEventListener('mouseout', handleMouseOut);
+
+      window.addEventListener('mousedown', handleMouseDown);
+      window.addEventListener('mouseup', handleMouseUp);
+
+      let animationId: number | null = null;
+
+      const draw = () => {
+        animationId = requestAnimationFrame(draw);
+
+        grid.render();
+      };
+
+      requestAnimationFrame(draw);
+
+      return () => {
+        canvas.removeEventListener('mousemove', handleMouseMove);
+        canvas.removeEventListener('mouseout', handleMouseOut);
+        window.removeEventListener('mousedown', handleMouseDown);
+        window.removeEventListener('mouseup', handleMouseUp);
+
+        if (!isNil(animationId)) {
+          cancelAnimationFrame(animationId);
+        }
+      };
+
+
     },
-    [
-      play_status === 'pause',
-      activeColor,
-      matrix,
-    ],
+    [activeColor, grid, isPlaying],
   );
-};
+}
 
 export default useCanvasPauseInteractive;

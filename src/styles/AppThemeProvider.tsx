@@ -4,7 +4,7 @@ import themes from './themes';
 
 type Props = React.PropsWithChildren;
 
-const ApmThemeProvider: React.FC<Props> = React.memo(
+const AppThemeProvider: React.FC<Props> = React.memo(
   (props) => {
     return (
       <ThemeProvider
@@ -15,4 +15,4 @@ const ApmThemeProvider: React.FC<Props> = React.memo(
   }
 );
 
-export default ApmThemeProvider;
+export default AppThemeProvider;

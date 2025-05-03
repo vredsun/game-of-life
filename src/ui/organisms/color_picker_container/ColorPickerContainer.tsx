@@ -1,15 +1,15 @@
 
 import * as React from 'react';
-import { DefaultTheme } from 'styled-components';
+import { CellColorName } from '~components/game_page/matrix/cell/types';
 import ColorItem from '~ui/atoms/color_item/ColorItem';
 import Flex from '~ui/atoms/flex/Flex';
 
 type Props = {
-  activeColor: keyof DefaultTheme['colors']['cellColors'];
-  handlePickColor: (color: keyof DefaultTheme['colors']['cellColors']) => void;
+  activeColor: CellColorName;
+  handlePickColor: (color: CellColorName) => void;
 };
 
-export const COLORS: Array<keyof DefaultTheme['colors']['cellColors']> = [
+export const COLORS: Array<CellColorName> = [
   'red',
   'yellow',
   'black'

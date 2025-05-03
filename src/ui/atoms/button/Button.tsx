@@ -47,7 +47,7 @@ export const getButtonCss = (isActive: boolean, isInverseColor: boolean, disable
 
 const Button = styled.button<ButtonProps>`
   ${({ isActive, isInverseColor, disabled }) => {
-    return getButtonCss(isActive, isInverseColor, disabled);
+    return getButtonCss(Boolean(isActive), Boolean(isInverseColor), Boolean(disabled));
   }};
 `;
 

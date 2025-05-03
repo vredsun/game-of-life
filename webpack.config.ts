@@ -14,11 +14,9 @@ const DIR_ROOT = path.join(__dirname);
 const DIR_APP_SRC = path.join(DIR_ROOT, 'src');
 const DIR_APP_DIST = path.join(DIR_ROOT, 'dist');
 
-const pkg = require(path.join(DIR_ROOT, 'package.json'));
-
 const PATH_TO_INDEX_FILE = path.join(DIR_APP_SRC, 'index.tsx');
 
-let BUILD = {
+const BUILD = {
   output: {
     path: DIR_APP_DIST,
   },
@@ -27,22 +25,19 @@ let BUILD = {
 
 const getPlugins = () => {
   const plugins = [
-    new ForkTsCheckerWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      async: true,
+    }),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
       inject: 'head',
       scriptLoading: 'defer',
-      title: 'Game of Life"',
+      title: 'Game of Life',
       template: BUILD.htmlTemplateName,
       hash: true,
-      meta: {
-        'mobile-web-app-capable': 'yes',
-      }
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       '__DEV__': isDevelopment,
-      '_VERSION_': JSON.stringify(pkg.version),
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV) || 'development',
     }),
     new MiniCssExtractPlugin({
@@ -69,7 +64,6 @@ const devServer: DevServerConfiguration = {
 
 const config: webpack.Configuration = {
   mode: isDevelopment ? 'development' : 'production',
-  // mode: 'development',
   node: {
     __filename: true,
     __dirname: true

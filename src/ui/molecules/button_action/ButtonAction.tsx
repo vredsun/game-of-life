@@ -3,16 +3,16 @@ import { IoIosPause, IoIosPlay } from 'react-icons/io';
 import Button, { ButtonProps } from '~ui/atoms/button/Button';
 
 type Props = {
-  status?: 'play' | 'pause';
+  isPlaying: boolean;
 } & ButtonProps;
 
 const ButtonAction: React.FC<Props> = React.memo(
-  ({ status, ...props }) => {
+  ({ isPlaying, ...props }) => {
 
     return (
       <Button {...props} aria-label="Старт/ Пауза">
         {
-          status === 'play'
+          isPlaying
             ? <IoIosPause size={30} />
             : <IoIosPlay size={30} />
         }

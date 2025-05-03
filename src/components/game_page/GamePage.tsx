@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { DefaultTheme } from 'styled-components';
 
+import { isNil } from 'lodash';
 import useCanvasPauseInteractive from '~components/game_page/useCanvasPauseInteractive';
 import useCanvasPlay from '~components/game_page/useCanvasPlay';
-import { initMatrix } from '~components/game_page/utils';
-import { getCanvasSize } from '~components/game_page/utils/draw';
 import Canvas from '~ui/atoms/canvas/Canvas';
-import H1LinkConway from '~ui/organisms/H1LinkConway/H1LinkConway';
 import ButtonsControlContainer from '~ui/organisms/buttons_control_container/ButtonsControlContainer';
 import ColorPickerContainer from '~ui/organisms/color_picker_container/ColorPickerContainer';
+import H1LinkConway from '~ui/organisms/Title/Title';
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from './constants';
+import { CellColorName } from './matrix/cell/types';
+import Grid from './matrix/Grid';
+import { resize } from './utils/draw';
 
 const ContainerStyle: React.CSSProperties = {
   display: 'flex',
@@ -19,30 +21,66 @@ const ContainerStyle: React.CSSProperties = {
 const GamePage: React.FC = React.memo(
   () => {
     const ref = React.useRef<HTMLCanvasElement>(null);
-    const [startStatus, changeStartStatus] = React.useState(false);
-    const [activeColor, setActiveColor] = React.useState<keyof DefaultTheme['colors']['cellColors']>('yellow')
+    const [activeColor, setActiveColor] = React.useState<CellColorName>('yellow');
 
-    const [gridStroke] = React.useState(0.5);
-    const [squareSize] = React.useState(10);
-    const [sizeX] = React.useState(90);
-    const [sizeY] = React.useState(45);
+    const [grid, setGrid] = React.useState<Grid | null>(null);
 
-    const [matrix, setMatrix] = React.useState(() => initMatrix(activeColor, sizeX, sizeY, squareSize, gridStroke, true));
+    React.useEffect(
+      () => {
+        const ctx = ref.current?.getContext('2d');
 
-    useCanvasPauseInteractive(
-      ref,
+        if (!ctx) {
+          return;
+        }
+
+        const grid = new Grid(ctx, activeColor);
+
+        grid.render();
+
+        setGrid(grid);
+      },
+      [],
+    )
+
+    const [isPlaying, setIsPlaying] = useCanvasPlay({
+      canvas: ref.current,
+      grid,
+    });
+
+    useCanvasPauseInteractive({
+      canvas: ref.current,
       activeColor,
-      startStatus ? 'play' : 'pause',
-      matrix,
+      isPlaying,
+      grid,
+    });
+
+    React.useEffect(
+      () => {
+        const canvas = ref.current;
+        const ctx = ref.current?.getContext('2d');
+
+        if (!canvas || !ctx) {
+          return;
+        }
+
+        let animationId: number | null = null;
+  
+        const draw = () => {
+          animationId = requestAnimationFrame(draw);
+          resize(canvas);
+        };
+  
+        requestAnimationFrame(draw);
+
+        return () => {
+          if (!isNil(animationId)) {
+            cancelAnimationFrame(animationId);
+          }
+        }
+      },
+      [],
     );
 
-    useCanvasPlay(
-      activeColor,
-      ref,
-      startStatus ? 'play' : 'pause',
-      matrix,
-      changeStartStatus,
-    );
 
     return (
       <div style={ContainerStyle}>
@@ -50,22 +88,22 @@ const GamePage: React.FC = React.memo(
         <div style={{ display: 'flex', gap: '12px' }}>
           <Canvas
             ref={ref}
-            width={getCanvasSize(squareSize, sizeX)}
-            height={getCanvasSize(squareSize, sizeY)}
+            width={CANVAS_WIDTH}
+            height={CANVAS_HEIGHT}
           />
           <ColorPickerContainer activeColor={activeColor} handlePickColor={setActiveColor} />
         </div>
         <ButtonsControlContainer
           handleTrashClick={() => {
-            changeStartStatus(false)
-            setMatrix(initMatrix(activeColor, sizeX, sizeY, squareSize, gridStroke));
+            setIsPlaying(false)
+            grid?.clear();
           }}
           handleSyncClick={() => {
-            changeStartStatus(false);
-            setMatrix(initMatrix(activeColor, sizeX, sizeY, squareSize, gridStroke, true))
+            setIsPlaying(false);
+            grid?.randomFill(activeColor);
           }}
-          handlePlayClick={() => changeStartStatus((oldState) => !oldState)}
-          status={startStatus ? 'play' : 'pause'}
+          handlePlayClick={() => setIsPlaying((oldState) => !oldState)}
+          isPlaying={isPlaying}
         />
       </div>
     );

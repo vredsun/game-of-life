@@ -1,23 +1,18 @@
 import * as React from 'react';
+import AppThemeProvider from '~styles/AppThemeProvider';
+import GlobalStyle from '~styles/styles-global';
 
-const ApmThemeProvider = React.lazy(() => (
-  import(/* webpackChunkName: "ApmThemeProvider" */ '~styles/ApmThemeProvider')
-));
-
-const RouterContainer = React.lazy(() => (
-  import(/* webpackChunkName: "RouterContainer" */ '~components/RouterContainer')
-));
-const GlobalStyle = React.lazy(() => (
-  import(/* webpackChunkName: "GlobalStyle" */ '~styles/styles-global')
+const GamePage = React.lazy(() => (
+  import('~components/game_page/GamePage')
 ));
 
 const App: React.FC<React.PropsWithChildren> = () => {
   return (
     <React.Suspense fallback={null}>
-      <ApmThemeProvider>
+      <AppThemeProvider>
         <GlobalStyle />
-        <RouterContainer />
-      </ApmThemeProvider>
+        <GamePage />
+      </AppThemeProvider>
     </React.Suspense>
   );
 };
