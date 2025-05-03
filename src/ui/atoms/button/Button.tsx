@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export type ButtonProps = {
-  onClick?: (event: any) => void;
+  onClick?: () => void;
   disabled?: boolean;
   isActive?: boolean;
   isInverseColor?: boolean;

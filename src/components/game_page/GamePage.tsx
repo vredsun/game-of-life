@@ -10,15 +10,13 @@ import H1LinkConway from '~ui/organisms/H1LinkConway/H1LinkConway';
 import ButtonsControlContainer from '~ui/organisms/buttons_control_container/ButtonsControlContainer';
 import ColorPickerContainer from '~ui/organisms/color_picker_container/ColorPickerContainer';
 
-type Props = {};
-
 const ContainerStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
 };
 
-const GamePage: React.FC<Props> = React.memo(
+const GamePage: React.FC = React.memo(
   () => {
     const ref = React.useRef<HTMLCanvasElement>(null);
     const [startStatus, changeStartStatus] = React.useState(false);

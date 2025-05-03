@@ -5,17 +5,17 @@ import { STATUS } from '~components/game_page/constants';
 import { getDeadColor, getLifeColor } from '../utils/colors';
 
 type Props = {
-  matrix: any[][];
+  matrix: Array<Array<Square>>;
   x: number;
   y: number;
-  coords: number[];
+  coords: Array<number>;
   gridStroke: number;
   baseColor: keyof DefaultTheme['colors']['cellColors'];
 
   status?: STATUS;
 };
 
-const checkCoordIndside = (coords: number[], x?: number, y?: number) => {
+const checkCoordIndside = (coords: Array<number>, x?: number, y?: number) => {
   if (isNumber(x) && isNumber(y)) {
     return (
       x >= coords[0]
@@ -31,10 +31,10 @@ class Square {
 
   _is_hover: boolean;
   _is_hover_in_cursor_line: boolean;
-  _coords: number[];
+  _coords: Array<number>;
   _x: number;
   _y: number;
-  _ownMatrix: typeof Square[][];
+  _ownMatrix: Array<Array<Square>>;
   status: STATUS;
   gridStroke: number;
 

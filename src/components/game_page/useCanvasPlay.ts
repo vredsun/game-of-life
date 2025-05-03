@@ -6,7 +6,7 @@ import Square from '~components/game_page/square/Square';
 import { checkMatrixOnAliveStatus } from '~components/game_page/utils';
 import { drawBg, drawMatrix, resize } from '~components/game_page/utils/draw';
 
-const useCanvasPlay = (activeColor: keyof DefaultTheme['colors']['cellColors'], ref_canvas: React.MutableRefObject<HTMLCanvasElement>, play_status: 'play' | 'pause', matrix: Square[][], changeStartStatus: (startStatus: boolean) => void) => {
+const useCanvasPlay = (activeColor: keyof DefaultTheme['colors']['cellColors'], ref_canvas: React.MutableRefObject<HTMLCanvasElement>, play_status: 'play' | 'pause', matrix: Array<Array<Square>>, changeStartStatus: (startStatus: boolean) => void) => {
   React.useEffect(
     () => {
       if (play_status === 'play') {

@@ -7,7 +7,7 @@ import Square from '~components/game_page/square/Square';
 
 let last_hover: Square | null = null;
 
-export const setHalfHoverSquare = (isHover: boolean, matrix: Square[][], x?: number, y?: number) => {
+export const setHalfHoverSquare = (isHover: boolean, matrix: Array<Array<Square>>, x?: number, y?: number) => {
   if (isNumber(x) && isNumber(y)) {
     for(let i = 0, length_i = matrix.length; i < length_i; i += 1) {
       matrix[i][y].changeHalfHover(isHover);
@@ -18,7 +18,7 @@ export const setHalfHoverSquare = (isHover: boolean, matrix: Square[][], x?: num
   }
 };
 
-export const checkOnHoverMatrix = (matrix: Square[][], x?: number, y?: number) => {
+export const checkOnHoverMatrix = (matrix: Array<Array<Square>>, x?: number, y?: number) => {
   if (last_hover?.checkOnHover(x, y)) {
     return last_hover;
   }

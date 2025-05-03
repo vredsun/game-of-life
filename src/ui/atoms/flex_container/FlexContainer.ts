@@ -1,9 +1,7 @@
 
 import styled from 'styled-components';
 
-type Props = {};
-
-const FlexContainer = styled.div<Props>`
+const FlexContainer = styled.div`
   margin-top: 12px;
   display: flex;
   flex-direction: row;

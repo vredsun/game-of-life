@@ -7,7 +7,7 @@ import Square from '~components/game_page/square/Square';
 import { drawBg, drawMatrix, resize } from '~components/game_page/utils/draw';
 import { checkOnHoverMatrix, clickOnHoverSquare } from '~components/game_page/utils/event_handlers';
 
-const useCanvasPauseInteractive = (ref_canvas: React.RefObject<HTMLCanvasElement>, activeColor: keyof DefaultTheme['colors']['cellColors'], play_status: 'play' | 'pause', matrix: Square[][]) => {
+const useCanvasPauseInteractive = (ref_canvas: React.RefObject<HTMLCanvasElement>, activeColor: keyof DefaultTheme['colors']['cellColors'], play_status: 'play' | 'pause', matrix: Array<Array<Square>>) => {
   React.useEffect(
     () => {
       if (play_status === 'pause') {
@@ -29,9 +29,9 @@ const useCanvasPauseInteractive = (ref_canvas: React.RefObject<HTMLCanvasElement
             clickOnHoverSquare(activeColor, isNewStatusOnMouse);
           }
         };
-        const handleMouseOut = (event: MouseEvent) => {
+        const handleMouseOut = () => {
           checkOnHoverMatrix(matrix, null, null);
-          handleMouseUp(event);
+          handleMouseUp();
           document.body.style.cursor = 'default';
         };
         const handleMouseDown = (event: MouseEvent) => {
@@ -43,7 +43,7 @@ const useCanvasPauseInteractive = (ref_canvas: React.RefObject<HTMLCanvasElement
           isMouseDown = true;
           isNewStatusOnMouse = isHoverSquare.status;
         };
-        const handleMouseUp = (event: MouseEvent) => {
+        const handleMouseUp = () => {
           clickOnHoverSquare(activeColor, isNewStatusOnMouse);
 
           isMouseDown = false;

@@ -3,3 +3,5 @@ vendor.d.ts
 webpack.config.ts
 tsconfig.json
 node_modules
+
+./@types/vendor.d.ts

@@ -1,11 +1,9 @@
 import * as React from 'react';
 
-import Version from '~ui/atoms/version/Version';
 import GamePage from '~components/game_page/GamePage';
+import Version from '~ui/atoms/version/Version';
 
-type Props = {};
-
-const RouterContainer: React.FC<Props> = React.memo(
+const RouterContainer: React.FC = React.memo(
   () => {
     return (
       <React.Suspense fallback={null}>

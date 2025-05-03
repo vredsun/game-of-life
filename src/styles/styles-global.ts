@@ -1,7 +1,7 @@
 import { createGlobalStyle, css } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
-  ${({ theme }) => css`
+  ${() => css`
     body {
       color: ${({ theme }) => theme.colors.black};
       background-color: #EEEEEE;
