@@ -6,13 +6,13 @@ import useCanvasPlay from '~components/game_page/useCanvasPlay';
 import Canvas from '~ui/atoms/canvas/Canvas';
 import ButtonsControlContainer from '~ui/organisms/buttons_control_container/ButtonsControlContainer';
 import ColorPickerContainer from '~ui/organisms/color_picker_container/ColorPickerContainer';
-import H1LinkConway from '~ui/organisms/Title/Title';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from './constants';
 import { CellColorName } from './matrix/cell/types';
 import Grid from './matrix/Grid';
 import { resize } from './utils/draw';
 
 const ContainerStyle: React.CSSProperties = {
+  paddingTop: '50px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -84,8 +84,8 @@ const GamePage: React.FC = React.memo(
 
     return (
       <div style={ContainerStyle}>
-        <H1LinkConway />
         <div style={{ display: 'flex', gap: '12px' }}>
+          <div></div>
           <Canvas
             ref={ref}
             width={CANVAS_WIDTH}

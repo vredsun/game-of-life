@@ -14,14 +14,14 @@ const ColorItem = styled.div<Props>`
   background-color: ${({ color, theme }) => theme.colors.cellColors[color]};
   transition: transform 300ms;
   cursor: pointer;
-  border: 2px solid black;
+  border: 1px solid black;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
     opacity: 0.9;
   }
 
-  ${({ isActive }) => isActive && css`transform: scale(1.1);`}
+  ${({ isActive }) => isActive && css`transform: scale(1.4);`}
 `;
 
 export default ColorItem;
