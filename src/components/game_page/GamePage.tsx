@@ -21,7 +21,7 @@ const ContainerStyle: React.CSSProperties = {
 const GamePage: React.FC = React.memo(
   () => {
     const ref = React.useRef<HTMLCanvasElement>(null);
-    const [activeColor, setActiveColor] = React.useState<CellColorName>('yellow');
+    const [activeColor, setActiveColor] = React.useState<CellColorName>('red');
 
     const [grid, setGrid] = React.useState<Grid | null>(null);
 
