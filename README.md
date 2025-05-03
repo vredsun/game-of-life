@@ -6,4 +6,4 @@
 
 - [x] Different colors
 - [x] Other main color
-- [] Mobile
+- [ ] Mobile
