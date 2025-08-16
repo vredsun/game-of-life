@@ -113,7 +113,6 @@ const config: webpack.Configuration = {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: [
-          'thread-loader',
           {
             loader: 'babel-loader',
             options: {
