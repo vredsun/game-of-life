@@ -1,15 +1,15 @@
 import * as React from 'react';
 
-import { isNil } from 'lodash';
-import useCanvasPauseInteractive from '~components/game_page/useCanvasPauseInteractive';
-import useCanvasPlay from '~components/game_page/useCanvasPlay';
 import Canvas from '~ui/atoms/canvas/Canvas';
-import ButtonsControlContainer from '~ui/organisms/buttons_control_container/ButtonsControlContainer';
 import ColorPickerContainer from '~ui/organisms/color_picker_container/ColorPickerContainer';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from './constants';
 import { CellColorName } from './matrix/cell/types';
-import Grid from './matrix/Grid';
-import { resize } from './utils/draw';
+import { getClearAction, getInitGridAction, getRandomFillAction, getSetCanvasAction } from './worker/actions/make-action';
+
+import ButtonsControlContainer from '~ui/organisms/buttons_control_container/ButtonsControlContainer';
+import useCanvasPauseInteractive from './useCanvasPauseInteractive';
+import useCanvasPlay from './useCanvasPlay';
+import { worker } from './worker/game';
 
 const ContainerStyle: React.CSSProperties = {
   paddingTop: '50px',
@@ -21,66 +21,34 @@ const ContainerStyle: React.CSSProperties = {
 const GamePage: React.FC = React.memo(
   () => {
     const ref = React.useRef<HTMLCanvasElement>(null);
+    const [isReady, setIsReady] = React.useState(false);
     const [activeColor, setActiveColor] = React.useState<CellColorName>('red');
-
-    const [grid, setGrid] = React.useState<Grid | null>(null);
 
     React.useEffect(
       () => {
-        const ctx = ref.current?.getContext('2d');
+        const canvas = ref.current;
 
-        if (!ctx) {
+        if (!canvas) {
           return;
         }
 
-        const grid = new Grid(ctx, activeColor);
+        const offscreen = canvas.transferControlToOffscreen();
+        worker.postMessage(getSetCanvasAction(offscreen), [offscreen]);
+        worker.postMessage(getInitGridAction(activeColor));
 
-        grid.render();
-
-        setGrid(grid);
+        setIsReady(true);
       },
       [],
     )
 
-    const [isPlaying, setIsPlaying] = useCanvasPlay({
-      canvas: ref.current,
-      grid,
-    });
+    const [isPlaying, setIsPlaying] = useCanvasPlay(isReady);
 
     useCanvasPauseInteractive({
       canvas: ref.current,
       activeColor,
       isPlaying,
-      grid,
+      isReady,
     });
-
-    React.useEffect(
-      () => {
-        const canvas = ref.current;
-        const ctx = ref.current?.getContext('2d');
-
-        if (!canvas || !ctx) {
-          return;
-        }
-
-        let animationId: number | null = null;
-  
-        const draw = () => {
-          animationId = requestAnimationFrame(draw);
-          resize(canvas);
-        };
-  
-        requestAnimationFrame(draw);
-
-        return () => {
-          if (!isNil(animationId)) {
-            cancelAnimationFrame(animationId);
-          }
-        }
-      },
-      [],
-    );
-
 
     return (
       <div style={ContainerStyle}>
@@ -91,16 +59,19 @@ const GamePage: React.FC = React.memo(
             width={CANVAS_WIDTH}
             height={CANVAS_HEIGHT}
           />
-          <ColorPickerContainer activeColor={activeColor} handlePickColor={setActiveColor} />
+          <ColorPickerContainer
+            activeColor={activeColor}
+            handlePickColor={setActiveColor}
+          />
         </div>
         <ButtonsControlContainer
           handleTrashClick={() => {
             setIsPlaying(false)
-            grid?.clear();
+            worker.postMessage(getClearAction());
           }}
           handleSyncClick={() => {
             setIsPlaying(false);
-            grid?.randomFill(activeColor);
+            worker.postMessage(getRandomFillAction(activeColor));
           }}
           handlePlayClick={() => setIsPlaying((oldState) => !oldState)}
           isPlaying={isPlaying}

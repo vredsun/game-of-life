@@ -5,12 +5,12 @@ import { CellColorName } from "./cell/types";
 import { getRandomCellStatus, getRandomGrid } from "./utils/get-random-grid";
 
 class Grid {
-  #ctx: CanvasRenderingContext2D;
+  #ctx: OffscreenCanvasRenderingContext2D;
   #grid: Array<Array<Cell>>;
   #hoveredCell: Cell | null = null;
   #fixesHoveredCellStatus: STATUS | null = null;
 
-  constructor(ctx: CanvasRenderingContext2D, activeColor: CellColorName) {
+  constructor(ctx: OffscreenCanvasRenderingContext2D, activeColor: CellColorName) {
     this.#ctx = ctx;
     this.#grid = getRandomGrid(activeColor);
   };

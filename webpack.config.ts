@@ -151,6 +151,18 @@ const config: webpack.Configuration = {
         test: /\.svg$/,
         use: ['@svgr/webpack'],
       },
+      {
+        test: /\.worker\.ts$/,
+        use: [
+          { loader: "worker-loader" },
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            },
+          },
+        ]
+      },
     ],
   },
   plugins: getPlugins(),

@@ -9,7 +9,7 @@
       "~*": ["./src/*"]
     },
     "allowJs": true,
-    "target": "ES2015",
+    "target": "es2024",
     "module": "commonjs",
     "declaration": false,
     "allowSyntheticDefaultImports": true,

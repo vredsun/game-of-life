@@ -126,7 +126,7 @@ class Cell {
     return darken(0.1, '#F7F7F7');
   }
 
-  renderBg(ctx: CanvasRenderingContext2D) {
+  renderBg(ctx: OffscreenCanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.fillStyle = this.bg_color;
 
@@ -139,7 +139,7 @@ class Cell {
     ctx.closePath();
   }
 
-  render(ctx: CanvasRenderingContext2D) {
+  render(ctx: OffscreenCanvasRenderingContext2D) {
     if (this.nextStatus) {
       this.status = this.nextStatus;
       this.nextStatus = null;
